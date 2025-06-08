@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>哲学文献検索</title>
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      margin: 0;
+      background: #f7f7f7;
+      color: #333;
+    }
+    header {
+      background: #34495e;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    #searchForm {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    #queryInput,
+    #resourceSelect {
+      padding: 0.5rem;
+      font-size: 1rem;
+      flex: 1;
+    }
+    #searchButton {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: white;
+      margin-bottom: 0.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #ecf0f1;
+      color: #555;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>哲学文献検索</h1>
+    <p>信頼できる哲学文献を探すための簡易検索ツールです。情報の正確性は必ず複数の文献で確認してください。</p>
+  </header>
+  <main>
+    <form id="searchForm">
+      <input type="text" id="queryInput" placeholder="キーワードを入力" />
+      <select id="resourceSelect">
+        <option value="https://plato.stanford.edu/search/search?query=">Stanford Encyclopedia of Philosophy</option>
+        <option value="https://philpapers.org/s/">PhilPapers</option>
+        <option value="https://www.jstage.jst.go.jp/result/global/-char/ja?globalSearchKey=">J-STAGE</option>
+        <option value="https://scholar.google.com/scholar?q=">Google Scholar</option>
+      </select>
+      <button id="searchButton" type="submit">検索</button>
+    </form>
+    <ul id="resourceList">
+      <li data-keywords="スタンフォード 哲学事典">
+        <a href="https://plato.stanford.edu/" target="_blank" rel="noopener">Stanford Encyclopedia of Philosophy</a>
+        <p>査読付きの専門家による記事が揃う無料のオンライン哲学百科事典。</p>
+      </li>
+      <li data-keywords="philpapers 論文">
+        <a href="https://philpapers.org/" target="_blank" rel="noopener">PhilPapers</a>
+        <p>世界中の哲学論文を検索できるデータベース。研究者の登録も多い。</p>
+      </li>
+      <li data-keywords="jstage 日本 調査">
+        <a href="https://www.jstage.jst.go.jp/browse/-char/ja" target="_blank" rel="noopener">J-STAGE</a>
+        <p>日本の学術雑誌を中心に、信頼性の高い論文を検索可能。</p>
+      </li>
+      <li data-keywords="google scholar">
+        <a href="https://scholar.google.com/" target="_blank" rel="noopener">Google Scholar</a>
+        <p>幅広い分野の学術論文を横断的に検索できる。引用数の確認にも便利。</p>
+      </li>
+    </ul>
+  </main>
+  <footer>
+    <p>&copy; 2025 哲学文献検索</p>
+  </footer>
+  <script>
+    const filterInput = document.getElementById('queryInput');
+    const select = document.getElementById('resourceSelect');
+    const form = document.getElementById('searchForm');
+    const list = document.getElementById('resourceList').getElementsByTagName('li');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const base = select.value;
+      const query = filterInput.value.trim();
+      if (query) {
+        window.open(base + encodeURIComponent(query), '_blank');
+      }
+    });
+
+    filterInput.addEventListener('input', () => {
+      const keyword = filterInput.value.toLowerCase();
+      for (const item of list) {
+        const kw = item.getAttribute('data-keywords');
+        if (!keyword || kw.toLowerCase().includes(keyword)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
