@@ -22,11 +22,20 @@
       margin: 2rem auto;
       padding: 1rem;
     }
-    #searchInput {
-      width: 100%;
+    #searchForm {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    #queryInput,
+    #resourceSelect {
       padding: 0.5rem;
       font-size: 1rem;
-      margin-bottom: 1rem;
+      flex: 1;
+    }
+    #searchButton {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
     }
     ul {
       list-style: none;
@@ -54,7 +63,16 @@
     <p>信頼できる哲学文献を探すための簡易検索ツールです。情報の正確性は必ず複数の文献で確認してください。</p>
   </header>
   <main>
-    <input type="text" id="searchInput" placeholder="キーワードを入力" />
+    <form id="searchForm">
+      <input type="text" id="queryInput" placeholder="キーワードを入力" />
+      <select id="resourceSelect">
+        <option value="https://plato.stanford.edu/search/search?query=">Stanford Encyclopedia of Philosophy</option>
+        <option value="https://philpapers.org/s/">PhilPapers</option>
+        <option value="https://www.jstage.jst.go.jp/result/global/-char/ja?globalSearchKey=">J-STAGE</option>
+        <option value="https://scholar.google.com/scholar?q=">Google Scholar</option>
+      </select>
+      <button id="searchButton" type="submit">検索</button>
+    </form>
     <ul id="resourceList">
       <li data-keywords="スタンフォード 哲学事典">
         <a href="https://plato.stanford.edu/" target="_blank" rel="noopener">Stanford Encyclopedia of Philosophy</a>
@@ -78,10 +96,22 @@
     <p>&copy; 2025 哲学文献検索</p>
   </footer>
   <script>
-    const input = document.getElementById('searchInput');
+    const filterInput = document.getElementById('queryInput');
+    const select = document.getElementById('resourceSelect');
+    const form = document.getElementById('searchForm');
     const list = document.getElementById('resourceList').getElementsByTagName('li');
-    input.addEventListener('input', () => {
-      const keyword = input.value.toLowerCase();
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const base = select.value;
+      const query = filterInput.value.trim();
+      if (query) {
+        window.open(base + encodeURIComponent(query), '_blank');
+      }
+    });
+
+    filterInput.addEventListener('input', () => {
+      const keyword = filterInput.value.toLowerCase();
       for (const item of list) {
         const kw = item.getAttribute('data-keywords');
         if (!keyword || kw.toLowerCase().includes(keyword)) {
